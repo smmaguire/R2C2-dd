@@ -595,9 +595,11 @@ def read_fastq_file(seq_file):
         if not line:
             continue
         # make an entry as a list and append the header to that list
+        # smm modified to hardcode the start of the read at base 40. Due to the fact that our reads
+        #     do not have any adapter.  
         if lineNum % 4 == 0 and line[0] == '@':
             splitLine = line[1:].split('_')
-            root, seed = splitLine[0], int(splitLine[1])
+            root, seed = splitLine[0], 40
             # Kayla: edited to handle hairpin split reads with pre and post
             # if len(splitLine) == 2:
             #     root, seed = splitLine[0], int(splitLine[1])
