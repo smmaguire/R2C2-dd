@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# Roger Volden and Chris Vollmers
 # Last updated: 2 Aug 2018
 
 '''
@@ -133,8 +135,7 @@ def revComp(sequence):
 def split_read(split_list, sequence, out_file1, qual, out_file1q, name):
     '''
     split_list : list, peak positions
-    sequence : strprint(timer)
-exit()
+    sequence : str
     out_file1 : output FASTA file
     qual : str, quality line from FASTQ
     out_file1q : output FASTQ file
@@ -145,6 +146,7 @@ exit()
     '''
     out_F = open(out_file1, 'w')
     out_Fq = open(out_file1q, 'w')
+    distance = []
     for i in range(len(split_list) - 1):
         split1 = split_list[i]
         split2 = split_list[i+1]
@@ -199,20 +201,6 @@ def read_fasta(inFile):
     for i in range(len(headers)):
         readDict[headers[i]] = sequences[i]
     return readDict
-
-# def read_fasta(inFile):
-#     '''Reads in FASTA files, returns a dict of header:sequence'''
-#     readDict = {}
-#     for line in open(inFile):
-#         line = line.rstrip()
-#         if not line:
-#             continue
-#         if line.startswith('>'):
-#             readDict[line[1:]] = ''
-#             lastHead = line[1:]
-#         else:
-#             readDict[lastHead] += line
-#     return readDict
 
 def rounding(x, base):
     '''Rounds to the nearest base, we use 50'''
@@ -543,108 +531,6 @@ def parse_file(matrix_file, seq_length, step, diag_set, diag_dict):
             diag_dict[position] = value
     return diag_set, diag_dict
 
-# def determine_consensus(name, seq, peaks, qual, median_distance, seed):
-#     '''
-#     Aligns and returns the consensus depending on the number of repeats
-#     If there are multiple peaks, it'll do the normal partial order
-#     alignment with racon correction
-#     If there are two repeats, it'll do the special pairwise consensus
-#     making
-#     Otherwise, it'll try to make a 0 repeat consensus: reads with a splint
-#     in the middle where you can try to salvage the flanking sequences to
-#     try and make a complete read
-#     '''
-#     repeats = ''
-#     corrected_consensus = ''
-#     if median_distance > medDistCutoff and len(peaks) > 1:
-#         out_F = temp_folder + '/' + name + '_F.fasta'
-#         out_Fq = temp_folder + '/' + name + '_F.fastq'
-#         poa_cons = temp_folder + '/' + name + '_consensus.fasta'
-#         final = temp_folder + '/' + name + '_corrected_consensus.fasta'
-#         overlap = temp_folder +'/' + name + '_overlaps.sam'
-#         pairwise = temp_folder + '/' + name + '_prelim_consensus.fasta'
-#         repeats = split_read(peaks, seq, out_F, qual, out_Fq, name)
-
-#         PIR = temp_folder + '/' + name + 'alignment.fasta'
-#         os.system('%s -read_fasta %s -hb -pir %s \
-#                   -do_progressive %s >./poa_messages.txt 2>&1' \
-#                   %(poa, out_F, PIR, score_matrix))
-#         reads = read_fasta(PIR)
-
-#         if repeats == '2':
-#             Qual_Fasta = open(pairwise, 'w')
-#             for read in reads:
-#                 if 'CONSENS' not in read:
-#                     Qual_Fasta.write('>' + read + '\n' + reads[read] + '\n')
-#             Qual_Fasta.close()
-#             os.system('%s %s %s %s >> %s' \
-#                       %(consensus, pairwise, out_Fq, name, poa_cons))
-
-#         else:
-#             for read in reads:
-#               if 'CONSENS0' in read:
-#                 out_cons_file = open(poa_cons, 'w')
-#                 out_cons_file.write('>' + name + '\n' \
-#                                     + reads[read].replace('-', '') + '\n')
-#                 out_cons_file.close()
-
-#         final = poa_cons
-#         for i in np.arange(1, 2, 1):
-#             try:
-#                 if i == 1:
-#                     input_cons = poa_cons
-#                     output_cons = poa_cons.replace('.fasta', '_' + str(i) + '.fasta')
-#                 else:
-#                     input_cons = poa_cons.replace('.fasta', '_' + str(i-1) + '.fasta')
-#                     output_cons = poa_cons.replace('.fasta', '_' + str(i) + '.fasta')
-
-#                 os.system('%s --secondary=no -ax map-ont \
-#                           %s %s > %s 2> ./minimap2_messages.txt' \
-#                           %(minimap2, input_cons, out_Fq, overlap))
-
-#                 os.system('%s -q 5 -t 1 \
-#                           %s %s %s >%s 2>./racon_messages.txt' \
-#                           %(racon,out_Fq, overlap, input_cons, output_cons))
-#                 final = output_cons
-#             except:
-#                 pass
-#         print(final)
-#         reads = read_fasta(final)
-#         for read in reads:
-#             corrected_consensus = reads[read]
-
-#     # reads that have the potential for a partial consensus
-#     elif len(peaks) == 1:
-#         # before/after positions are the alignment start/end positions for
-#         # both portions of the sequence
-#         beforeIndeces, afterIndeces = water_parser()
-#         endPortion = seq[beforeIndeces[1]:seed]
-#         begPortion = seq[seed:afterIndeces[0]]
-
-#         # make a temporary FASTQ file for consensus.py with portions
-#         # of reads that match itself
-#         tempFastqName = temp_folder + '/' + name + 'consensusFastq.fastq'
-#         tempFastq = open(tempFastqName, 'w+')
-#         tempFastq.write('@' + name + '\n'
-#                         + seq[beforeIndeces[0]:beforeIndeces[1] + 1] + '\n+\n'
-#                         + qual[beforeIndeces[0]:beforeIndeces[1] + 1] + '\n'
-#                         + '@' + name + '\n'
-#                         + seq[afterIndeces[0]:afterIndeces[1] + 1] + '\n+\n'
-#                         + qual[afterIndeces[0]:afterIndeces[1] + 1])
-#         tempFastq.close()
-#         alignedFasta = temp_folder + '/partial.fasta'
-#         fromConsensus = temp_folder + '/' + name + '_fromConsensus.fasta'
-#         os.system('%s %s %s > %s'
-#                   %(consensus, alignedFasta, tempFastqName, fromConsensus))
-#         toGetConsensus = read_fasta(fromConsensus)
-#         seqFromCons = toGetConsensus['consensus']
-#         # put all the pieces back together to make the consensus
-#         corrected_consensus = begPortion + seqFromCons + endPortion
-#         repeats = '0'
-
-#     return corrected_consensus, repeats
-
-
 def determine_consensus(name, seq, peaks, qual, median_distance, seed):
     '''
     Aligns and returns the consensus depending on the number of repeats
@@ -656,7 +542,6 @@ def determine_consensus(name, seq, peaks, qual, median_distance, seed):
     in the middle where you can try to salvage the flanking sequences to
     try and make a complete read
     '''
-    from time import time
     repeats = ''
     corrected_consensus = ''
     if median_distance > medDistCutoff and len(peaks) > 1:
@@ -669,13 +554,9 @@ def determine_consensus(name, seq, peaks, qual, median_distance, seed):
         repeats = split_read(peaks, seq, out_F, qual, out_Fq, name)
 
         PIR = temp_folder + '/' + name + 'alignment.fasta'
-        poa_start = time()
         os.system('%s -read_fasta %s -hb -pir %s \
                   -do_progressive %s >./poa_messages.txt 2>&1' \
                   %(poa, out_F, PIR, score_matrix))
-        poa_stop = time()
-        if timer:
-            print('POA took ' + str(poa_stop - poa_start) + ' seconds to run.')
         reads = read_fasta(PIR)
 
         if repeats == '2':
@@ -684,13 +565,8 @@ def determine_consensus(name, seq, peaks, qual, median_distance, seed):
                 if 'CONSENS' not in read:
                     Qual_Fasta.write('>' + read + '\n' + reads[read] + '\n')
             Qual_Fasta.close()
-            conspy_start = time()
             os.system('%s %s %s %s >> %s' \
                       %(consensus, pairwise, out_Fq, name, poa_cons))
-            conspy_stop = time()
-            if timer:
-                print('consensus.py took ' + str(conspy_stop - conspy_start) \
-                      + ' seconds to run.')
 
         else:
             for read in reads:
@@ -709,23 +585,14 @@ def determine_consensus(name, seq, peaks, qual, median_distance, seed):
                 else:
                     input_cons = poa_cons.replace('.fasta', '_' + str(i-1) + '.fasta')
                     output_cons = poa_cons.replace('.fasta', '_' + str(i) + '.fasta')
-                mm_start = time()
+
                 os.system('%s --secondary=no -ax map-ont \
                           %s %s > %s 2> ./minimap2_messages.txt' \
                           %(minimap2, input_cons, out_Fq, overlap))
-                mm_stop = time()
-                if timer:
-                    print('minimap2 took ' + str(mm_stop - mm_start) \
-                          + ' seconds to run.')
 
-                racon_start = time()
                 os.system('%s -q 5 -t 1 \
                           %s %s %s >%s 2>./racon_messages.txt' \
-                          %(racon, out_Fq, overlap, input_cons, output_cons))
-                racon_stop = time()
-                if timer:
-                    print('Racon took ' + str(racon_stop - racon_start) \
-                          + ' seconds to run.')
+                          %(racon,out_Fq, overlap, input_cons, output_cons))
                 final = output_cons
             except:
                 pass
@@ -755,14 +622,8 @@ def determine_consensus(name, seq, peaks, qual, median_distance, seed):
         tempFastq.close()
         alignedFasta = temp_folder + '/partial.fasta'
         fromConsensus = temp_folder + '/' + name + '_fromConsensus.fasta'
-        zero_cons_start = time()
         os.system('%s %s %s > %s'
                   %(consensus, alignedFasta, tempFastqName, fromConsensus))
-        zero_cons_stop = time()
-        if timer:
-            print('Zero repeat consensus.py took ' \
-                  + str(zero_cons_stop - zero_cons_start) \
-                  + ' seconds to run.')
         toGetConsensus = read_fasta(fromConsensus)
         seqFromCons = toGetConsensus['consensus']
         # put all the pieces back together to make the consensus
@@ -812,50 +673,6 @@ def makeFigPartial(scoreList, peakList, seed, filtered_peaks):
     plt.close()
     sys.exit()
 
-# def read_fastq_file(seq_file):
-#     '''
-#     Takes a FASTQ file and returns a list of tuples
-#     In each tuple:
-#         name : str, read ID
-#         seed : int, first occurrence of the splint
-#         seq : str, sequence
-#         qual : str, quality line
-#         average_quals : float, average quality of that line
-#         seq_length : int, length of the sequence
-#     '''
-#     read_list, lineNum = [], 0
-#     lastPlus = False
-#     for line in open(seq_file):
-#         line = line.rstrip()
-#         if not line:
-#             continue
-#         # make an entry as a list and append the header to that list
-#         if lineNum % 4 == 0 and line[0] == '@':
-#             splitLine = line[1:].split('_')
-#             root, seed = splitLine[0], 40
-#             read_list.append([])
-#             read_list[-1].append(root)
-#             read_list[-1].append(seed)
-
-#         # sequence
-#         if lineNum % 4 == 1:
-#             read_list[-1].append(line)
-
-#         # quality header
-#         if lineNum % 4 == 2:
-#             lastPlus = True
-
-#         # quality
-#         if lineNum % 4 == 3 and lastPlus:
-#             read_list[-1].append(line)
-#             avgQ = sum([ord(x)-33 for x in line])/len(line)
-#             read_list[-1].append(avgQ)
-#             read_list[-1].append(len(read_list[-1][2]))
-#             read_list[-1] = tuple(read_list[-1])
-
-#         lineNum += 1
-#     return read_list
-
 def read_fastq_file(seq_file):
     '''
     Takes a FASTQ file and returns a list of tuples
@@ -875,8 +692,8 @@ def read_fastq_file(seq_file):
             continue
         # make an entry as a list and append the header to that list
         if lineNum % 4 == 0 and line[0] == '@':
-            splitLine = line[1:].split(' ')
-            root, seed = splitLine[0], 40
+            splitLine = line[1:].split('_')
+            root, seed = splitLine[0], int(splitLine[1])
             read_list.append([])
             read_list[-1].append(root)
             read_list[-1].append(seed)
@@ -941,50 +758,7 @@ def analyze_reads(read_list):
                                 + '_' + str(len(final_consensus)))
                 final_out.write('\n' + final_consensus + '\n')
                 final_out.close()
-                os.system('rm ' + temp_folder + '/*')
-
-# def analyze_reads(read_list):
-#     '''
-#     Takes reads that are longer than 1000 bases and gives the consensus.
-#     Writes to R2C2_Consensus.fasta
-#     '''
-#     for name, seed, seq, qual, average_quals, seq_length in read_list:
-#         if seqLenCutoff < seq_length:
-#             final_consensus = ''
-#             # score lists are made for sequence before and after the seed
-#             forward = seq[seed:]
-#             score_list_f = split_SW(name, forward, step=True)
-#             reverse = revComp(seq[:seed])
-#             score_list_r = split_SW(name, reverse, step=True)
-#             # calculate where peaks are and the median distance between them
-#             peaks, median_distance = callPeaks(score_list_f, score_list_r, seed)
-
-#             if len(peaks) == 1:
-#                 scoreList = split_SW(name, seq, step=False)
-#                 slr = []
-#                 peaks, median_distance = callPeaks(scoreList, slr, seed)
-#                 if len(peaks) == 2:
-#                     peaks.remove(seed)
-#                 else:
-#                     continue
-
-#             if figure and len(peaks) > 1:
-#                 makeFig(score_list_f, score_list_r, peaks, seed, median_distance)
-#             if figure and len(peaks) == 1:
-#                 makeFigPartial(scoreList, peaks, seed, median_distance)
-
-#             final_consensus, repeats1 = determine_consensus(name, seq, peaks, \
-#                                                             qual, median_distance, \
-#                                                             seed)
-#             if final_consensus:
-#                 final_out = open(out_file, 'a')
-#                 final_out.write('>' + name + '_' \
-#                                 + str(round(average_quals, 2)) + '_' \
-#                                 + str(seq_length) + '_' + str(repeats1) \
-#                                 + '_' + str(len(final_consensus)))
-#                 final_out.write('\n' + final_consensus + '\n')
-#                 final_out.close()
-#                 os.system('rm ' + temp_folder+'/*')
+                os.system('rm ' + temp_folder+'/*')
 
 def main():
     '''Controls the flow of the program'''
@@ -996,4 +770,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# Roger Volden and Chris Vollmers
 # Last updated: 2 Aug 2018
 
 '''
