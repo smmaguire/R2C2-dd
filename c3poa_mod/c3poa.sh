@@ -16,4 +16,5 @@ python C3POa.py \
 -l 1500 \
 -c /mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/config.txt \
 -n 4 \
--g 1000
+-g 1000 \
+-s ${name}
