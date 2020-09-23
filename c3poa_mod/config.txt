@@ -3,10 +3,10 @@
 # You need to include all of the example programs
 # Use tabs to separate the program name from the path
 
-poa	/mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/resources/bio-pipeline/poaV2
+poa	/mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/resources/bio-pipeline/poaV2/poa
 racon	racon
 gonk	/mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/resources/gonk/gonk
 minimap2	minimap2
-consensus	/mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/resources/C3POa
+consensus	/mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/resources/C3POa/consensus.py
 racon	racon
 blat	blat
