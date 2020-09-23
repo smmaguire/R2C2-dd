@@ -6,6 +6,8 @@
 #$ -pe smp 4
 #$ -m e
 
+source activate C3POa
+
 python C3POa.py \
 -r ${reads} \
 -p ${current_d} \
