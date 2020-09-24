@@ -24,8 +24,7 @@ source activate C3POa
 cd ${current_d}
 echo ${current_d}
 ls
-file_list=ls
-echo $file_list
+echo ${name}_Consensus.fasta
 echo "making_blast_db"
 
 makeblastdb -in ${name}_Consensus.fasta -parse_seqids -dbtype 'nucl'
