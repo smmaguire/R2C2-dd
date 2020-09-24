@@ -39,6 +39,6 @@ blastn \
 -evalue 1000 \
 -penalty -3 \
 -reward 1 \
--num_alignments 10 \
+-num_alignments 1 \
 > ${name}"_aln.tab"
 
