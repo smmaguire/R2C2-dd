@@ -23,14 +23,14 @@ source activate C3POa
 # blast the output
 cd ${current_d}
 
-echo "making_blast_db"
+### echo "making_blast_db"
 
-makeblastdb -in ${name}_Consensus.fasta -parse_seqids -dbtype 'nucl'
+### makeblastdb -in ${name}_Consensus.fasta -parse_seqids -dbtype 'nucl'
 
 ########## Blast the adapter sequence against the blast database
 blastn \
--query /mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/reference.fasta \
--subject ${name}_Consensus.fasta \
+-query ${name}_Consensus.fasta \
+-subject /mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/resources/reference/reference.fasta \
 -task "blastn-short" \
 -word_size 10 \
 -gapopen 5 \
