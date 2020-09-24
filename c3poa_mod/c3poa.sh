@@ -27,8 +27,8 @@ makeblastdb -in ${name}_Consensus.fasta -parse_seqids -dbtype 'nucl'
 
 ########## Blast the adapter sequence against the blast database
 blastn \
--query $new_data_dir"/adapter.fasta" \
--subject /mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/reference.fasta \
+-query /mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_mod/reference.fasta \
+-subject ${name}_Consensus.fasta \
 -task "blastn-short" \
 -word_size 10 \
 -gapopen 5 \
