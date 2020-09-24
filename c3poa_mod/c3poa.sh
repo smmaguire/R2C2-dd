@@ -22,9 +22,7 @@ source activate C3POa
 
 # blast the output
 cd ${current_d}
-echo ${current_d}
-ls
-echo ${name}_Consensus.fasta
+
 echo "making_blast_db"
 
 makeblastdb -in ${name}_Consensus.fasta -parse_seqids -dbtype 'nucl'

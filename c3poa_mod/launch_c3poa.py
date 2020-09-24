@@ -16,6 +16,6 @@ echo $current_dir
 echo $new_name
 
 
-#qsub -v reads=$i,current_d=$current_dir,name=$new_name c3poa.sh
+qsub -v reads=$i,current_d=$current_dir,name=$new_name c3poa.sh
 
 done
