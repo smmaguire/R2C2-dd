@@ -23,9 +23,12 @@ source activate C3POa
 # blast the output
 cd ${current_d}
 echo ${current_d}
-echo ${ls}
+ls
+file_list=ls
+echo $file_list
 echo "making_blast_db"
-sudo makeblastdb -in ${name}_Consensus.fasta -parse_seqids -dbtype 'nucl'
+
+makeblastdb -in ${name}_Consensus.fasta -parse_seqids -dbtype 'nucl'
 
 ########## Blast the adapter sequence against the blast database
 blastn \
