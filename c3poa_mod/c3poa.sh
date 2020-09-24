@@ -25,7 +25,7 @@ cd ${current_d}
 echo ${current_d}
 echo ${ls}
 echo "making_blast_db"
-makeblastdb -in ${name}_Consensus.fasta -parse_seqids -dbtype 'nucl'
+sudo makeblastdb -in ${name}_Consensus.fasta -parse_seqids -dbtype 'nucl'
 
 ########## Blast the adapter sequence against the blast database
 blastn \
