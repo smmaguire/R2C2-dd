@@ -3,7 +3,7 @@
 #$ -cwd
 #$ -j y
 #$ -S /bin/bash
-#$ -pe smp 4
+#$ -pe smp 1
 #$ -m e
 
 source activate C3POa
