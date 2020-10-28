@@ -6,7 +6,7 @@
 
 ### For now the file will be just be a test. Want to see how long it takes. 
 
-data_path="/mnt/home/smaguire/work/r2c2/r2c2_dd/data/Human\ Brain-Sep18-2020/fastq/fastq_pass/barcode01/"
+data_path="/mnt/home/smaguire/work/r2c2/r2c2_dd/data/Human\ Brain-Sep18-2020/fastq/fastq_pass/barcode01"
 for i in $( ls $data_path*.fastq); do
 new_name=${i#$data_path}
 new_name=${new_name%.fastq}
