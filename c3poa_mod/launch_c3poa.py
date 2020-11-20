@@ -10,7 +10,7 @@ data_path="/mnt/nanopore/mdezoysa/fastq_pass/"
 for i in $( ls $data_path*.fastq); do
 new_name=${i#$data_path}
 new_name=${new_name%.fastq}
-current_dir=/mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_human_output/$new_name
+current_dir=/mnt/home/smaguire/work/r2c2/r2c2_dd/c3poa_human_no_barcode/$new_name
 mkdir -p $current_dir
 echo $current_dir
 echo $new_name
