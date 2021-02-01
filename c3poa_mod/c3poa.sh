@@ -8,7 +8,7 @@
 
 source activate C3POa
 
-Run python
+#Run python
 python C3POa.py \
 -r ${reads} \
 -p ${current_d} \
